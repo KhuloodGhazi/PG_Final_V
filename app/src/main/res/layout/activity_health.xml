@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".speciality.HealthActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Health section"
+        android:textSize="50sp"/>
+
+    <LinearLayout
+        android:id="@+id/linearlayout"
+        android:layout_centerInParent="true"
+        android:layout_margin="24dp"
+        android:orientation="vertical"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_txt"
+            android:hint="Click here to upload"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnupload"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload"/>
+    </LinearLayout>
+
+</RelativeLayout>

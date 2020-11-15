@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:contentPadding="3dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--ImageView: User Profile Image-->
+        <com.blogspot.atifsoftwares.circularimageview.CircularImageView
+            android:id="@+id/profileImageMessagelistUser"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/ic_person_black"/>
+        <LinearLayout
+            android:id="@+id/luserInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@id/profileImageMessagelistUser"
+            android:layout_toRightOf="@id/profileImageMessagelistUser"
+            android:layout_marginLeft="4dp">
+            <!--TextView: Username Profile Image-->
+            <TextView
+                android:id="@+id/nameMessagelistUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="his name"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp" />
+            <!--TextView: Name Profile-->
+            <TextView
+                android:id="@+id/usernameMessagelistUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="his username" />
+        </LinearLayout>
+        <!--TextView: Last Message by sender and receiver-->
+        <TextView
+            android:id="@+id/lastmessageMessagelistUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="message"
+            android:textSize="16sp"
+            android:maxLines="2"
+            android:layout_marginStart="4dp"
+            android:layout_below="@id/luserInfo"
+            android:layout_toEndOf="@id/profileImageMessagelistUser"
+            android:layout_toRightOf="@id/profileImageMessagelistUser"
+            android:layout_marginLeft="4dp" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

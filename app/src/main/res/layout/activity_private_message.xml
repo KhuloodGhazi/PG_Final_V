@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PrivateMessageActivity">
+<com.google.android.material.appbar.MaterialToolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <!--Receiver profile picture-->
+    <com.blogspot.atifsoftwares.circularimageview.CircularImageView
+        android:id="@+id/profileMessageImage"
+        android:layout_height="35dp"
+        android:layout_width="35dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_person"
+        app:c_background_color="@color/colorPrimaryDark"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="20dp"
+        android:gravity="center"
+        android:layout_marginLeft="20dp">
+        <!--Receiver name-->
+        <TextView
+            android:id="@+id/nameProfileMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+        <!--Receiver username-->
+        <TextView
+            android:id="@+id/usernameProfileMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+</com.google.android.material.appbar.MaterialToolbar>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/message_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/sendMessageLayout"/>
+
+
+    <LinearLayout
+        android:id="@+id/sendMessageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <!--ImageButton: send message-->
+        <ImageButton
+            android:id="@+id/imageBtnMessage"
+            android:background="@null"
+            android:src="@drawable/ic_image_message"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+     <!--EditText: input message-->
+        <EditText
+            android:id="@+id/messageEdit"
+            android:layout_width="0dp"
+            android:background="@null"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:hint="Start a message"/>
+
+        <!--ImageButton: send message-->
+        <ImageButton
+            android:id="@+id/sendBtnMessage"
+            android:background="@null"
+            android:src="@drawable/ic_send_message"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+        </LinearLayout>
+</RelativeLayout>

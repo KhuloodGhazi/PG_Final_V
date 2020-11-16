@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pg.R;
+import com.example.pg.speciality.HealthEventActivity;
 import com.example.pg.upload.Events;
 import com.example.pg.upload.Upload;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +33,9 @@ public class HealthEventUser extends AppCompatActivity {
 
     ListView listView;
     DatabaseReference databaseReference;
-    List<Events> eventsList;
+
+    ArrayList<Events> eventsList;
+
 
 
     @Override
@@ -41,78 +44,29 @@ public class HealthEventUser extends AppCompatActivity {
         setContentView(R.layout.activity_health_event_user);
 
         listView = findViewById(R.id.list_view);
-        eventsList = new ArrayList<Events>();
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(eventsList.get(position).getUrl()), "Event");
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                Toast.makeText(getApplicationContext(),
-                        "Click ListItem Number " + position, Toast.LENGTH_LONG)
-                        .show();
-            }
-        });
+        eventsList = new ArrayList<>();
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
 
         retrieveFiles();
 
     }
     private void retrieveFiles() {
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("uploadPDF").child("health");
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
+
                     Events events = ds.getValue(Events.class);
                     eventsList.add(events);
 
                 }
 
-                String[] names = new String[eventsList.size()];
-
-                for(int i = 0; i < names.length; i++) {
-                    names[i] = eventsList.get(i).getDate();
-                }
-
-                for(int i = 0; i < names.length; i++) {
-                    names[i] = eventsList.get(i).getTime();
-                }
-
-                for(int i = 0; i < names.length; i++) {
-                    names[i] = eventsList.get(i).getDec();
-                }
-
-                for(int i = 0; i < names.length; i++) {
-                    names[i] = eventsList.get(i).getUrl();
-                }
-
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
-                        android.R.layout.simple_list_item_1, names) {
-
-                    @NonNull
-                    @Override
-                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-                        View view = super.getView(position, convertView, parent);
-                        TextView textView = view.findViewById(android.R.id.text1);
-
-                        textView.setTextColor(Color.BLACK);
-                        textView.setTextSize(20);
-                        return view;
-
-                    }
-                };
-
-                listView.setAdapter(arrayAdapter);
+                Events adapter = new Events(HealthEventUser.this, eventsList);
+                listView.setAdapter(adapter);
 
             }
-
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -120,7 +74,7 @@ public class HealthEventUser extends AppCompatActivity {
             }
 
         });
-    }
 
+    }
 
 }

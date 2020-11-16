@@ -1,22 +1,84 @@
 package com.example.pg.upload;
 
-public class Events {
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
+import com.example.pg.R;
+
+import java.util.ArrayList;
+
+public class Events extends BaseAdapter{
+
+    Context mContext;
     public String date;
     public String time;
     public String dec;
-    public String url;
+
+    Events event;
+    ArrayList<Events> arr = new ArrayList<>();
+//    ArrayList<String> arr = new ArrayList<>();
 
 
+    public Events() {
 
-    public Events(String toString, String s, String date, String time, String dec, String url) {
+    }
+    public Events(Context mContext, ArrayList<Events> arr) {
+        this.mContext = mContext;
+        this.arr = arr;
+    }
+//    public Events(Context mContext, ArrayList<String> arr) {
+//        this.mContext = mContext;
+//        this.arr = arr;
+//    }
+
+//    public Events(Context mContext, ArrayList<Events> arr) {
+//        this.mContext = mContext;
+//        this.arr = arr;
+//    }
+
+    public Events(String date, String time, String dec) {
             this.date = date;
             this.time = time;
             this.dec = dec;
-            this.url = url;
         }
 
-        public String getDate () {
+    @Override
+    public int getCount() {
+        return arr.size();
+    }
+    @Override
+    public Object getItem(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        Events event = arr.get(i);
+        view = LayoutInflater.from(mContext).inflate(R.layout.rowitemevent,null);
+
+        TextView time = view.findViewById(R.id.id_time);
+        TextView date = view.findViewById(R.id.id_date);
+        TextView dec = view.findViewById(R.id.id_dec);
+
+        time.setText(event.getTime());
+        date.setText(event.getDate());
+        dec.setText(event.getDec());
+
+
+        return view;
+
+    }
+
+    public String getDate () {
             return date;
         }
 
@@ -38,14 +100,6 @@ public class Events {
 
         public void setDec (String dec){
             this.dec = dec;
-        }
-
-        public String getUrl () {
-            return url;
-        }
-
-        public void setUrl (String url){
-            this.url = url;
         }
 
     }

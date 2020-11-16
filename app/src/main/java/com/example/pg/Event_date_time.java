@@ -10,41 +10,55 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.example.pg.speciality.HealthEventActivity;
 import com.example.pg.upload.Events;
 
 import com.example.pg.speciality.HealthActivity;
 import com.example.pg.upload.Events;
 import com.example.pg.upload.Upload;
+import com.example.pg.user.HealthEventUser;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 public class Event_date_time extends AppCompatActivity {
-
-    int date, time, Dec;
-
 
     EditText date_in;
     EditText time_in;
     EditText dec_in;
+
     Button sumButton;
 
-    StorageReference storageReference;
+    private String userDate;
+    private String userTime;
+    private int eventCounter;
+
     DatabaseReference databaseReference;
+    final HashMap<String , Object> hashMap = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +69,6 @@ public class Event_date_time extends AppCompatActivity {
         time_in = findViewById(R.id.time);
         dec_in = findViewById(R.id.Dec);
         sumButton = findViewById(R.id.buttsum);
-
-        storageReference = FirebaseStorage.getInstance().getReference();
-        databaseReference = FirebaseDatabase.getInstance().getReference("AddEvent").child("health");
 
         date_in.setInputType(InputType.TYPE_NULL);
         time_in.setInputType(InputType.TYPE_NULL);
@@ -78,8 +89,14 @@ public class Event_date_time extends AppCompatActivity {
             }
         });
 
+        sumButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                uploadToFirebase();
+            }
+        });
 
-        sumButton.setEnabled(false);
+        databaseReference = FirebaseDatabase.getInstance().getReference("events").push();
 
 
     }
@@ -94,6 +111,8 @@ public class Event_date_time extends AppCompatActivity {
                 calendar.set(Calendar.MINUTE, minute);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 time_in.setText(simpleDateFormat.format(calendar.getTime()));
+
+                userTime = simpleDateFormat.format(calendar.getTime());
 
             }
         };
@@ -113,6 +132,8 @@ public class Event_date_time extends AppCompatActivity {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
                 date_in.setText(simpleDateFormat.format(calendar.getTime()));
 
+                userDate = simpleDateFormat.format(calendar.getTime());
+
             }
         };
 
@@ -120,57 +141,41 @@ public class Event_date_time extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void gatherData() {
+        final String userInput = dec_in.getText().toString();
 
-
-
-        sumButton.setEnabled(true);
-        date_in.setText(data.getDataString().substring(data.getDataString().lastIndexOf("/") + 1));
-        time_in.setText(data.getDataString().substring(data.getDataString().lastIndexOf("/") + 1));
-        dec_in.setText(data.getDataString().substring(data.getDataString().lastIndexOf("/") + 1));
-//            editText.setText(data.getDataString());
-        sumButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                uploadToFirebase(data.getData());
-            }
-        });
-
+        hashMap.put("time" , userTime);
+        hashMap.put("date" , userDate);
+        hashMap.put("dec" , userInput);
 
     }
+    public void uploadToFirebase() {
 
+        gatherData();
 
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                databaseReference.setValue(hashMap);
+                Toast.makeText(Event_date_time.this, "Event has been created successfully", Toast.LENGTH_LONG).show();
 
-    public void uploadToFirebase(Uri data) {
+//                if (ForumFragment.user_type.equals("spec")) {
+                startActivity(new Intent(getApplicationContext(), HealthEventActivity.class));
+//                    Log.d("TAG", "event_date_time spec : " + ForumFragment.user_type);
+//                }
+//                if (ForumFragment.user_type.equals("user")) {
+//                    startActivity(new Intent(getApplicationContext(), HealthEventUser.class));
+//                    Log.d("TAG", "event_date_time user:  " + ForumFragment.user_type);
+//
+//                }
+            }
 
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Event is adding...");
-        progressDialog.show();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-        StorageReference ref = storageReference.child("event/").child("health/").child("Events" + System.currentTimeMillis() + ".add");
-        ref.putFile(data)
-
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!uriTask.isComplete()) ;
-                        Uri uri = uriTask.getResult();
-
-                        Events events = new Events(date_in.getText().toString(), uri.toString(), time_in.getText().toString(), uri.toString(), dec_in.getText().toString(), uri.toString());
-                        databaseReference.child(databaseReference.push().getKey()).setValue(events);
-                        Toast.makeText(Event_date_time.this, "File upload", Toast.LENGTH_LONG).show();
-                        date_in.setText("");
-                        time_in.setText("");
-                        dec_in.setText("");
-                        progressDialog.dismiss();
-
-                    }
-                });
-
+            }
+        });
 
     }
 }

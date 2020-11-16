@@ -1,16 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.mohammadatif:CircularImageView:1.0.0@aar">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-2/files-2.1/0556d6b9dc6693c0ac328d3079746857/jetified-CircularImageView-1.0.0/res" />
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-2/files-2.1/0556d6b9dc6693c0ac328d3079746857/jetified-CircularImageView-1.0.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-2/files-2.1/0556d6b9dc6693c0ac328d3079746857/jetified-CircularImageView-1.0.0/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ef8e040b94685401e06b96ca3f80abb/jetified-CircularImageView-1.0.0/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ef8e040b94685401e06b96ca3f80abb/jetified-CircularImageView-1.0.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ef8e040b94685401e06b96ca3f80abb/jetified-CircularImageView-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fc4f60d913a4a256445f12a66ed11897/jetified-CircularImageView-1.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fc4f60d913a4a256445f12a66ed11897/jetified-CircularImageView-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fc4f60d913a4a256445f12a66ed11897/jetified-CircularImageView-1.0.0/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.github.mohammadatif/CircularImageView/1.0.0/1cdbbcbbf5408ed882227d9c0a8303aa9927c4c0/CircularImageView-1.0.0-sources.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.mohammadatif/CircularImageView/1.0.0/1cdbbcbbf5408ed882227d9c0a8303aa9927c4c0/CircularImageView-1.0.0-sources.jar!/" />
     </SOURCES>
   </library>

@@ -32,7 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ForumFragment extends Fragment {
 
-    public String user_type = "";
+    public static String user_type = "";
 
     public ForumFragment() {
         // Required empty public constructor

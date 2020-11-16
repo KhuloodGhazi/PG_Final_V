@@ -16,12 +16,17 @@ import com.example.pg.R;
 import com.example.pg.upload.Upload;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
 
 public class FamilyActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,8 +35,14 @@ public class FamilyActivity extends AppCompatActivity implements View.OnClickLis
 
     EditText editText;
 
+    EditText mTitle;
+
+    String title_user_input;
+
     StorageReference storageReference;
     DatabaseReference databaseReference;
+
+    final HashMap<String , Object> hashMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +52,14 @@ public class FamilyActivity extends AppCompatActivity implements View.OnClickLis
         upload = findViewById(R.id.btnupload_f);
         editText = findViewById(R.id.et_txt_f);
 
+        mTitle = findViewById(R.id.upload_title);
+
         editText.setOnClickListener(this);
         upload.setOnClickListener(this);
 
 
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("uploadPDF").child("family");
-
 
         upload.setEnabled(false);
 
@@ -96,6 +108,10 @@ public class FamilyActivity extends AppCompatActivity implements View.OnClickLis
 
                         Upload upload = new Upload(editText.getText().toString(), uri.toString());
                         databaseReference.child(databaseReference.push().getKey()).setValue(upload);
+
+                        uploadTitle();
+
+
                         Toast.makeText(FamilyActivity.this, "File upload", Toast.LENGTH_LONG).show();
                         editText.setText("");
                         progressDialog.dismiss();
@@ -109,6 +125,33 @@ public class FamilyActivity extends AppCompatActivity implements View.OnClickLis
                 progressDialog.setMessage("File uploading " + (int) progress + "%");
             }
         });
+    }
+
+    public void gatherData() {
+        String title_user_input = mTitle.getText().toString();
+
+        hashMap.put("title" , title_user_input);
+
+    }
+    public void uploadTitle() {
+
+        gatherData();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("titles").push();
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                databaseReference.setValue(hashMap);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     @Override

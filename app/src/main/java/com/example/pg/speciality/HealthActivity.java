@@ -13,15 +13,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.pg.R;
+import com.example.pg.upload.Events;
 import com.example.pg.upload.Upload;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.ArrayList;
 
 public class HealthActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,9 +35,13 @@ public class HealthActivity extends AppCompatActivity implements View.OnClickLis
     Button upload;
 
     EditText editText;
+    EditText mTitle;
+
+    String title_user_input;
 
     StorageReference storageReference;
     DatabaseReference databaseReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,7 @@ public class HealthActivity extends AppCompatActivity implements View.OnClickLis
 
         upload = findViewById(R.id.btnupload);
         editText = findViewById(R.id.et_txt);
+        mTitle = findViewById(R.id.upload_title);
 
         editText.setOnClickListener(this);
         upload.setOnClickListener(this);
@@ -96,8 +107,13 @@ public class HealthActivity extends AppCompatActivity implements View.OnClickLis
 
                         Upload upload = new Upload(editText.getText().toString(), uri.toString());
                         databaseReference.child(databaseReference.push().getKey()).setValue(upload);
-                        Toast.makeText(HealthActivity.this, "File upload", Toast.LENGTH_LONG).show();
+
+                        uploadTitle();
+
+                        Toast.makeText(HealthActivity.this, "File has been uploaded", Toast.LENGTH_LONG).show();
+
                         editText.setText("");
+                        mTitle.setText("");
                         progressDialog.dismiss();
 
                     }
@@ -110,6 +126,26 @@ public class HealthActivity extends AppCompatActivity implements View.OnClickLis
                 progressDialog.setMessage("File uploading " + (int) progress + "%");
             }
         });
+    }
+
+    public void uploadTitle() {
+        title_user_input = mTitle.getText().toString();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("title");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                databaseReference.setValue(title_user_input);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     @Override

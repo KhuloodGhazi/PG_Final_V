@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pg.R;
+import com.example.pg.upload.Title;
 import com.example.pg.upload.Upload;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +34,8 @@ public class FamilyUser extends AppCompatActivity {
 
     ListView listView;
     DatabaseReference databaseReference;
+    DatabaseReference ref;
+    List<Title> titleList;
     List<Upload> uploadedList;
 
     @Override
@@ -41,6 +45,7 @@ public class FamilyUser extends AppCompatActivity {
 
         listView = findViewById(R.id.list_view);
         uploadedList = new ArrayList<>();
+        titleList = new ArrayList<>();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -54,11 +59,10 @@ public class FamilyUser extends AppCompatActivity {
                     startActivity(newIntent);
                 } catch (ActivityNotFoundException e) {
                     // Instruct the user to install a PDF reader here, or something
+                    Toast.makeText(getApplicationContext(),
+                            "Please install PDF reader.", Toast.LENGTH_LONG)
+                            .show();
                 }
-
-                Toast.makeText(getApplicationContext(),
-                        "Click ListItem Number " + position, Toast.LENGTH_LONG)
-                        .show();
             }
         });
 
@@ -66,7 +70,10 @@ public class FamilyUser extends AppCompatActivity {
     }
 
     private void retrieveFiles() {
+
         databaseReference = FirebaseDatabase.getInstance().getReference("uploadPDF").child("family");
+
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -83,8 +90,44 @@ public class FamilyUser extends AppCompatActivity {
                     names[i] = uploadedList.get(i).getName();
                 }
 
+
+            }
+
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        /**
+         *
+         * ###################### Title fetch ##################3
+         *
+         */
+
+        ref = FirebaseDatabase.getInstance().getReference("titles");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
+                for(DataSnapshot ds : snapshot.getChildren()) {
+                    Title titles = ds.getValue(Title.class);
+                    titleList.add(titles);
+
+                }
+
+                String[] t = new String[titleList.size()];
+
+                for(int i = 0; i < t.length; i++) {
+                    t[i] = titleList.get(i).getTitle();
+                }
+
+
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
-                        android.R.layout.simple_list_item_1, names) {
+                        android.R.layout.simple_list_item_1, t) {
 
                     @NonNull
                     @Override
@@ -104,13 +147,12 @@ public class FamilyUser extends AppCompatActivity {
 
             }
 
-
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
 
 }
 }
